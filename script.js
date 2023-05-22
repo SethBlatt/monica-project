@@ -210,4 +210,3 @@ const year = now.getFullYear();
 const month = now.getMonth();
 const calendarTableHTML = generateCalendarTableHTML(year, month);
 container.innerHTML = calendarTableHTML;
-q
