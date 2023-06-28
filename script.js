@@ -1,41 +1,38 @@
 /* 
-text input box to input chores.
+text input box to input choreList.
 minute counter input box for how long each chore should take.
 time input box for how frequetly each chore should be done.
 number box for how many children and text input box for child name.
 counter input box for child age (auto assigns random chore to 
 random child based on age) 
 assign button that creates a table depending on num of children and 
-chores input.
+choreList input.
 font: Comic Sans MS
 Colors: Days of the week black, chore list brown.
 Child Color: random color per child.
 Else color: black.
 
-Once a list of chores are made, one of them is randomly assigned to a child
+Once a list of choreList are made, one of them is randomly assigned to a child
 based on the child's age.
 a button that adds the number of children that you input, for example: 
 if 5 children,
 button produces 5 rows, then input each child, submit to populate random table.
 need to include an input box with minimum and maximum age.
 Populate first day randomly, then sequence the rest of the month. 
-Check mark for chores that are complete.
+Check mark for choreList that are complete.
  You would also need to store this information in a persistent data store so 
  that it can be loaded the next time the calendar is opened.
 */
 
-
-
 const numberOfChildrenInput = document.getElementById("number-of-children");
 const inputFieldsDiv = document.getElementById("input-fields");
 function createChoreInputElements() {
-
   const numberOfChildren = numberOfChildrenInput.value;
 
   // Clear any existing input fields
   inputFieldsDiv.innerHTML = "";
 
-  // Add new input fields based on the number of chores
+  // Add new input fields based on the number of choreList
   for (let i = 0; i < numberOfChildren; i++) {
     const choreInput = document.createElement("input");
 
@@ -65,7 +62,6 @@ function createChoreInputElements() {
     const childNameInput = document.createElement("input");
     childNameInput.setAttribute("type", "text");
     childNameInput.setAttribute("placeholder", "Name of child");
-
     inputFieldsDiv.appendChild(choreInput);
     inputFieldsDiv.appendChild(minChoreLengthInput);
     inputFieldsDiv.appendChild(choreFrequencyInput);
@@ -76,17 +72,15 @@ function createChoreInputElements() {
 }
 numberOfChildrenInput.addEventListener("change", createChoreInputElements);
 
-
-
-const submitButton = document.getElementById("submit-button");
+const submitButton = window.document.getElementById("submit-button");
 
 function createCalendarEvents() {
-
+  
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
 
-  const chores = [];
+  const choreList = [];
   const inputFields = inputFieldsDiv.querySelectorAll("input");
 
   // Extract input values for each chore
@@ -95,45 +89,64 @@ function createCalendarEvents() {
       name: inputFields[i].value,
       time: parseInt(inputFields[i + 1].value),
       frequency: inputFields[i + 2].value,
-      child: inputFields[i + 3].value
+      child: inputFields[i + 3].value,
     };
-    chores.push(chore);
-
+    choreList.push(chore);
   }
-
 
   // Create calendar events for each chore
   const calendarTable = document.querySelector("table");
   const firstDayOfMonth = new Date(year, month, 1);
   let dayOfWeek = firstDayOfMonth.getDay();
 
-  for (const chore of chores) {
+  for (const chore of choreList) {
     let frequency = parseInt(chore.frequency.charAt(0));
 
     for (let i = 1; i <= 5; i++) {
       if (dayOfWeek === i && frequency > 0) {
         const choreDate = new Date(year, month, dayOfWeek + (i - 1));
         const choreDay = choreDate.getDate();
-        const choreCell = calendarTable.querySelector
-          ("td:nth-of-type(" + (choreDay + dayOfWeek - 1) + ")");
+        const choreCell = calendarTable.querySelector(
+          "td:nth-of-type(" + (choreDay + dayOfWeek - 1) + ")"
+        );
 
-        const choreHTML = "<div>" + chore.name + "<br>" + chore.child + "</div>";
+        const choreHTML =
+          "<div>" + chore.name + "<br>" + chore.child + "</div>";
         choreCell.innerHTML += choreHTML;
 
         frequency--;
+        
       }
     }
   }
 }
 
-submitButton.addEventListener("click", createCalendarEvents)
 
+submitButton.addEventListener("click", createCalendarEvents);
 
-
-const monthNames = ["January", "February", "March", "April", "May",
-  "June", "July", "August", "September", "October", "November", "December"];
-const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-  "Friday", "Saturday"];
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const dayNames = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 function generateCalendarHTML(year, month) {
   // Get the first day of the month
@@ -142,36 +155,35 @@ function generateCalendarHTML(year, month) {
   const numDays = new Date(year, month + 1, 0).getDate();
 
   // Start building the table HTML
-  let tableHTML = '<table>';
-
+  let tableHTML = "<table>";
 
   // Add the day names row
-  tableHTML += '<tr>';
+  tableHTML += "<tr>";
   for (let i = 0; i < 7; i++) {
-    tableHTML += '<th>' + dayNames[i] + '</th>';
+    tableHTML += "<th>" + dayNames[i] + "</th>";
   }
-  tableHTML += '</tr>';
+  tableHTML += "</tr>";
 
   // Add the days of the month
   let day = 1;
-  tableHTML += '<tr>';
+  tableHTML += "<tr>";
   for (let i = 0; i < firstDay.getDay(); i++) {
-    tableHTML += '<td></td>';
+    tableHTML += "<td></td>";
   }
   for (let i = 0; i < numDays; i++) {
     if (day > 31) {
       break;
     }
     if (i > 0 && (i + firstDay.getDay()) % 7 === 0) {
-      tableHTML += '</tr><tr>';
+      tableHTML += "</tr><tr>";
     }
-    tableHTML += '<td>' + day + '</td>';
+    tableHTML += "<td>" + day + "</td>";
     day++;
   }
   for (let i = 0; i < 7 - ((numDays + firstDay.getDay()) % 7); i++) {
-    tableHTML += '<td></td>';
+    tableHTML += "<td></td>";
   }
-  tableHTML += '</tr></table>';
+  tableHTML += "</tr></table>";
 
   return tableHTML;
 }
@@ -182,29 +194,29 @@ function generateCalendarTableHTML(year, month) {
   const calendarHTML = generateCalendarHTML(year, month);
 
   // Create the table HTML
-  let tableHTML = '<table>';
+  let tableHTML = "<table>";
 
   // Add the month and year header row
-  tableHTML += '<tr><th colspan="7">' + monthNames[month] + ' ' + year + '</th></tr>';
+  tableHTML +=
+    '<tr><th colspan="7">' + monthNames[month] + " " + year + "</th></tr>";
 
   // Add the day names row
-  tableHTML += '<tr>';
+  tableHTML += "<tr>";
   for (let i = 0; i < 7; i++) {
-    tableHTML += '<th>' + dayNames[i] + '</th>';
+    tableHTML += "<th>" + dayNames[i] + "</th>";
   }
-  tableHTML += '</tr>';
+  tableHTML += "</tr>";
 
   // Add the calendar cell
-  tableHTML += '<tr><td colspan="7">' + calendarHTML + '</td></tr>';
+  tableHTML += '<tr><td colspan="7">' + calendarHTML + "</td></tr>";
 
   // Close the table HTML
-  tableHTML += '</table>';
+  tableHTML += "</table>";
 
   return tableHTML;
 }
 
-
-const container = document.getElementById('calendar-container');
+const container = document.getElementById("calendar-container");
 const now = new Date();
 const year = now.getFullYear();
 const month = now.getMonth();
